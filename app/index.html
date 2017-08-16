@@ -84,8 +84,6 @@ getJSON('style.json', function(err, stylesheet) {
   var map = new mapboxgl.Map({
     container: 'map',
     style: stylesheet,
-    center: [49.45176, 11.06539],
-    zoom: 16,
     hash: true
   });
   map.addControl(new mapboxgl.NavigationControl());
