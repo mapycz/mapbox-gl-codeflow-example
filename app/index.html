@@ -63,6 +63,7 @@ mapboxgl.util.getJSON('style.json', function(err, stylesheet) {
     center: [40, -74.50],
     zoom: 9
   });
+  map.addControl(new mapboxgl.Navigation());
 });
 </script>
 </body>
