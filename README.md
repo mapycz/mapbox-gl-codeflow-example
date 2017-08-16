@@ -46,3 +46,10 @@ was.
 browserify ./src/style-spec/validate_style.js --standalone validate > ../mapbox-gl-style-editor/app/mapbox-gl/style_spec.js
 ```
 
+### Generate font
+
+Using https://github.com/sabas/genfontgl
+
+```sh
+./index.js font.ttf output-dir
+```
