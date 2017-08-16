@@ -11,9 +11,7 @@ basic utilities:
 
 * A [Mapbox GL JS](https://www.mapbox.com/mapbox-gl-js/)-powered page for
   previewing the style
-* Support for [JSON](http://json.org/), [JSON5](http://json5.org/),
-  [YAML](http://yaml.org/), and [TOML](https://github.com/toml-lang/toml)
-  files as input. You can also specify an executable JavaScript file with a `.js` extension
+* You can also specify an executable JavaScript file with a `.js` extension
   and hashbang and the file will be run and its output piped into the style
   definition.
 * Live-reloading when the style is changed
@@ -40,9 +38,11 @@ from [CartoCSS](https://www.mapbox.com/tilemill/docs/manual/carto/)
 to [Mapnik XML](https://github.com/mapnik/mapnik/wiki/XMLConfigReference)
 was.
 
-## Example
+## Update
 
-This project is an _example_ of one such flow: you could do the same
-with a bare-bones node.js script, or Python or any other environment. You could
-also skip some of the fancier features, like live reloading, or add others,
-like a more complex debugging view.
+### Generate new `style_spec.js`
+
+```sh
+browserify ./src/style-spec/validate_style.js --standalone validate > ../mapbox-gl-style-editor/app/mapbox-gl/style_spec.js
+```
+
