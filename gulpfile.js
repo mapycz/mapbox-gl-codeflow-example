@@ -5,7 +5,7 @@ var gulp = require('gulp'),
   connect = require('gulp-connect');
 
 var path = require('path'),
-  minimist = require('minimist');
+    minimist = require('minimist');
 
 var options = minimist(process.argv.slice(2), {
   string: 'style',
@@ -14,14 +14,12 @@ var options = minimist(process.argv.slice(2), {
 
 gulp.task('connect', function() {
   connect.server({
-    root: 'app',
-    livereload: true
+    root: 'app'
   });
 });
 
 gulp.task('html', function() {
-  gulp.src(['./app/*.html', options.style])
-    .pipe(connect.reload());
+  gulp.src(['./app/*.html', options.style]);
 });
 
 gulp.task('watch', function() {

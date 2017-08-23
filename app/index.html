@@ -38,7 +38,7 @@ getJSON = function(url, callback) {
     };
     xhr.onload = function() {
         if (xhr.status >= 200 && xhr.status < 300 && xhr.response) {
-            let data;
+            var data;
             try {
                 data = JSON.parse(xhr.response);
             } catch (err) {
@@ -54,6 +54,8 @@ getJSON = function(url, callback) {
 };
 
 var errors = document.getElementById('errors');
+var map;
+
 
 getJSON('style.json', function(err, stylesheet) {
   if (err) {
@@ -81,13 +83,24 @@ getJSON('style.json', function(err, stylesheet) {
       return;
   }
 
-  var map = new mapboxgl.Map({
+  map = new mapboxgl.Map({
     container: 'map',
     style: stylesheet,
     hash: true
   });
   map.addControl(new mapboxgl.NavigationControl());
-});
+}); 
+
+function reload() {
+  getJSON('style.json', function(err, stylesheet) {
+    map.setStyle(stylesheet);
+  });
+}
+
+setInterval(function() {
+  reload();
+}, 4000);
+
 </script>
 </body>
 </html>
