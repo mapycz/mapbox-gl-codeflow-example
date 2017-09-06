@@ -1,105 +1,158 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset='utf-8' />
-  <title>Mapbox GL</title>
-  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-  <script src='mapbox-gl/mapbox-gl.js'></script>
-  <script src='mapbox-gl/style_spec.js'></script>
-  <link href='mapbox-gl/mapbox-gl.css' rel='stylesheet' />
-  <style>
-    body { margin:0; padding:0; }
-    #map { position:absolute; top:0; bottom:0; width:100%; }
-    #errors {
-      pointer-events: none;
-      position:absolute;
-      top:0;
-      bottom:0;
-      display:none;
-      background:#fff;
-      color:red;
-      padding:20px;
-      font:13px/20px monospace;
-      box-sizing:border-box;
-      width:100%;
-    }
-  </style>
+    <meta charset='utf-8'/>
+    <title>Mapbox GL</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no'/>
+    <script src='mapbox-gl/mapbox-gl.js'></script>
+    <script src='mapbox-gl/style_spec.js'></script>
+    <link href='mapbox-gl/mapbox-gl.css' rel='stylesheet'/>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+
+        #errors {
+            pointer-events: none;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            display: none;
+            background: #fff;
+            color: red;
+            padding: 20px;
+            font: 13px/20px monospace;
+            box-sizing: border-box;
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
 <div id='map'></div>
 <div id='errors'></div>
 <script>
-getJSON = function(url, callback) {
-    const xhr = new window.XMLHttpRequest();
-    xhr.open('GET', url, true);
-    xhr.setRequestHeader('Accept', 'application/json');
-    xhr.onerror = function(e) {
-        callback(e);
-    };
-    xhr.onload = function() {
-        if (xhr.status >= 200 && xhr.status < 300 && xhr.response) {
-            var data;
-            try {
-                data = JSON.parse(xhr.response);
-            } catch (err) {
-                return callback(err);
-            }
-            callback(null, data);
-        } else {
-            callback(new AJAXError(xhr.statusText, xhr.status));
-        }
-    };
-    xhr.send();
-    return xhr;
-};
+	getJSON = function (url, callback) {
+		const xhr = new window.XMLHttpRequest();
+		xhr.open('GET', url, true);
+		xhr.setRequestHeader('Accept', 'application/json');
+		xhr.onerror = function (e) {
+			callback(e);
+		};
+		xhr.onload = function () {
+			if (xhr.status >= 200 && xhr.status < 300 && xhr.response) {
+				var data;
+				try {
+					data = JSON.parse(xhr.response);
+				} catch (err) {
+					return callback(err);
+				}
+				callback(null, data);
+			} else {
+				callback(new AJAXError(xhr.statusText, xhr.status));
+			}
+		};
+		xhr.send();
+		return xhr;
+	};
 
-var errors = document.getElementById('errors');
-var map;
+	var errors = document.getElementById('errors');
+	var map;
+
+	// button for toggle showTileBoundaries and showCollisionBoxes
+	function Button(name, method) {
+		this.name = name;
+		this.method = method;
+	}
+
+	Button.prototype.onAdd = function (map) {
+		this._container = document.createElement('button');
+		this._container.className = 'mapboxgl-ctrl';
+		this._container.textContent = this.name;
+		this._container.onclick = function () {
+			map[this.method] = !map[this.method];
+		}.bind(this);
+		return this._container;
+	};
+
+	Button.prototype.onRemove = function () {
+		this._container.parentNode.removeChild(this._container);
+	};
 
 
-getJSON('style.json', function(err, stylesheet) {
-  if (err) {
-    errors.appendChild(document.createElement('h2')).innerHTML = 'JSON Error';
-    errors.appendChild(document.createElement('p')).innerHTML = err.toString();
-    errors.style.display = 'block';
-    return;
-  }
+	// Button for force reload styles
+	function ButtonRefresh(name) {
+		this.name = name;
+	}
 
-  if (stylesheet.error) {
-      errors.style.display = 'block';
-      errors.appendChild(document.createElement('h2')).innerHTML = 'Script Evaluation Error';
-      errors.appendChild(document.createElement('pre')).innerHTML = stylesheet.error;
-      return;
-  }
+	ButtonRefresh.prototype.onAdd = function () {
+		this._container = document.createElement('button');
+		this._container.className = 'mapboxgl-ctrl';
+		this._container.textContent = this.name;
+		this._container.onclick = function () {
+			reload();
+		};
+		return this._container;
+	};
 
-  var valid = validate(stylesheet);
-  if (valid.length) {
-      errors.style.display = 'block';
-      errors.appendChild(document.createElement('h2')).innerHTML = 'Style Validation Error';
-      valid.forEach(function(e) {
-          errors.appendChild(document.createElement('p')).innerHTML = e.message;
-          console.error(e);
-      });
-      return;
-  }
+	ButtonRefresh.prototype.onRemove = function () {
+		this._container.parentNode.removeChild(this._container);
+	};
 
-  map = new mapboxgl.Map({
-    container: 'map',
-    style: stylesheet,
-    hash: true
-  });
-  map.addControl(new mapboxgl.NavigationControl());
-}); 
+	getJSON('style.json', function (err, stylesheet) {
+		if (err) {
+			errors.appendChild(document.createElement('h2')).innerHTML = 'JSON Error';
+			errors.appendChild(document.createElement('p')).innerHTML = err.toString();
+			errors.style.display = 'block';
+			return;
+		}
 
-function reload() {
-  getJSON('style.json', function(err, stylesheet) {
-    map.setStyle(stylesheet);
-  });
-}
+		if (stylesheet.error) {
+			errors.style.display = 'block';
+			errors.appendChild(document.createElement('h2')).innerHTML = 'Script Evaluation Error';
+			errors.appendChild(document.createElement('pre')).innerHTML = stylesheet.error;
+			return;
+		}
 
-setInterval(function() {
-  reload();
-}, 4000);
+		var valid = validate(stylesheet);
+		if (valid.length) {
+			errors.style.display = 'block';
+			errors.appendChild(document.createElement('h2')).innerHTML = 'Style Validation Error';
+			valid.forEach(function (e) {
+				errors.appendChild(document.createElement('p')).innerHTML = e.message;
+				console.error(e);
+			});
+			return;
+		}
+
+		map = new mapboxgl.Map({
+			container: 'map',
+			style: stylesheet,
+			hash: true
+		});
+		map.addControl(new mapboxgl.NavigationControl());
+		map.addControl(new Button('Tile Boundaries', 'showTileBoundaries'));
+		map.addControl(new Button('Collision Boxes ', 'showCollisionBoxes'));
+		map.addControl(new ButtonRefresh('Refresh stylů '));
+	});
+
+
+	function reload() {
+		getJSON('style.json', function (err, stylesheet) {
+			map.setStyle(stylesheet);
+		});
+	}
+
+	setInterval(function () {
+		reload();
+	}, 4000);
 
 </script>
 </body>
