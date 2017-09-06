@@ -31,7 +31,7 @@ gulp.task('compile', function() {
   switch (path.extname(options.style)) {
     case '.js':
       return gulp.src(options.style)
-        .pipe(exec('<%= file.path %>', { pipeStdout: true, continueOnError: true }))
+        .pipe(exec('node <%= file.path %>', { pipeStdout: true, continueOnError: true }))
         .pipe(through2.obj(function(file, enc, cb) {
           if (!file.exec.stdout && file.exec.stderr) {
             file.contents = new Buffer(JSON.stringify({ error: file.exec.stderr }));
