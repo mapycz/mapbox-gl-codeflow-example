@@ -4,9 +4,11 @@
     <meta charset='utf-8'/>
     <title>Mapbox GL</title>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no'/>
-    <script src='mapbox-gl/mapbox-gl.js'></script>
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.54.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.54.0/mapbox-gl.css' rel='stylesheet' />
+    <!--script src='mapbox-gl/mapbox-gl.js'></script-->
     <script src='mapbox-gl/style_spec.js'></script>
-    <link href='mapbox-gl/mapbox-gl.css' rel='stylesheet'/>
+    <!--link href='mapbox-gl/mapbox-gl.css' rel='stylesheet'/-->
     <style>
         body {
             margin: 0;
@@ -86,23 +88,20 @@
 		this._container.parentNode.removeChild(this._container);
 	};
 
+        var ButtonCustom = function(name, callback) {
+            this.name = name;
+            this.callback = callback;
+        };
 
-	// Button for force reload styles
-	function ButtonRefresh(name) {
-		this.name = name;
-	}
-
-	ButtonRefresh.prototype.onAdd = function () {
+	ButtonCustom.prototype.onAdd = function () {
 		this._container = document.createElement('button');
 		this._container.className = 'mapboxgl-ctrl';
 		this._container.textContent = this.name;
-		this._container.onclick = function () {
-			reload();
-		};
+		this._container.onclick = this.callback
 		return this._container;
 	};
 
-	ButtonRefresh.prototype.onRemove = function () {
+	ButtonCustom.prototype.onRemove = function () {
 		this._container.parentNode.removeChild(this._container);
 	};
 
@@ -121,7 +120,7 @@
 			return;
 		}
 
-		var valid = validate(stylesheet);
+		var valid = window.validate ? validate(stylesheet) : [];
 		if (valid.length) {
 			errors.style.display = 'block';
 			errors.appendChild(document.createElement('h2')).innerHTML = 'Style Validation Error';
@@ -140,7 +139,8 @@
 		map.addControl(new mapboxgl.NavigationControl());
 		map.addControl(new Button('Tile Boundaries', 'showTileBoundaries'));
 		map.addControl(new Button('Collision Boxes ', 'showCollisionBoxes'));
-		map.addControl(new ButtonRefresh('Refresh stylů '));
+		map.addControl(new ButtonCustom('Refresh stylů ', () => refresh()));
+		map.addControl(new ButtonCustom('Tisk ', () => printMap()));
 	});
 
 
@@ -149,6 +149,24 @@
 			map.setStyle(stylesheet);
 		});
 	}
+
+        function printMap() {
+                map.once('render', () => {
+	                var canvas = map.getCanvas();
+			canvas.toBlob(blob => {
+				var url = URL.createObjectURL(blob);
+	        	        var a = document.createElement('a');
+        	        	a.download = 'map.png';
+	        	        a.href = url;
+        	        	document.body.appendChild(a);
+	                	a.click();
+		                a.remove();			
+				URL.revokeObjectURL(url);
+			}, 'image/png');
+                });
+		// force re-render
+		map.setBearing(map.getBearing());
+        }
 
 	setInterval(function () {
 		reload();
