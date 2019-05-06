@@ -41,136 +41,136 @@
 <div id='map'></div>
 <div id='errors'></div>
 <script>
-	getJSON = function (url, callback) {
-		const xhr = new window.XMLHttpRequest();
-		xhr.open('GET', url, true);
-		xhr.setRequestHeader('Accept', 'application/json');
-		xhr.onerror = function (e) {
-			callback(e);
-		};
-		xhr.onload = function () {
-			if (xhr.status >= 200 && xhr.status < 300 && xhr.response) {
-				var data;
-				try {
-					data = JSON.parse(xhr.response);
-				} catch (err) {
-					return callback(err);
-				}
-				callback(null, data);
-			} else {
-				callback(new AJAXError(xhr.statusText, xhr.status));
-			}
-		};
-		xhr.send();
-		return xhr;
-	};
-
-	var errors = document.getElementById('errors');
-	var map;
-
-	// button for toggle showTileBoundaries and showCollisionBoxes
-	function Button(name, method) {
-		this.name = name;
-		this.method = method;
-	}
-
-	Button.prototype.onAdd = function (map) {
-		this._container = document.createElement('button');
-		this._container.className = 'mapboxgl-ctrl';
-		this._container.textContent = this.name;
-		this._container.onclick = function () {
-			map[this.method] = !map[this.method];
-		}.bind(this);
-		return this._container;
-	};
-
-	Button.prototype.onRemove = function () {
-		this._container.parentNode.removeChild(this._container);
-	};
-
-        var ButtonCustom = function(name, callback) {
-            this.name = name;
-            this.callback = callback;
+    getJSON = function (url, callback) {
+        const xhr = new window.XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.setRequestHeader('Accept', 'application/json');
+        xhr.onerror = function (e) {
+            callback(e);
         };
+        xhr.onload = function () {
+            if (xhr.status >= 200 && xhr.status < 300 && xhr.response) {
+                var data;
+                try {
+                    data = JSON.parse(xhr.response);
+                } catch (err) {
+                    return callback(err);
+                }
+                callback(null, data);
+            } else {
+                callback(new AJAXError(xhr.statusText, xhr.status));
+            }
+        };
+        xhr.send();
+        return xhr;
+    };
 
-	ButtonCustom.prototype.onAdd = function () {
-		this._container = document.createElement('button');
-		this._container.className = 'mapboxgl-ctrl';
-		this._container.textContent = this.name;
-		this._container.onclick = this.callback
-		return this._container;
-	};
+    var errors = document.getElementById('errors');
+    var map;
 
-	ButtonCustom.prototype.onRemove = function () {
-		this._container.parentNode.removeChild(this._container);
-	};
+    // button for toggle showTileBoundaries and showCollisionBoxes
+    function Button(name, method) {
+        this.name = name;
+        this.method = method;
+    }
 
-	getJSON('style.json', function (err, stylesheet) {
-		if (err) {
-			errors.appendChild(document.createElement('h2')).innerHTML = 'JSON Error';
-			errors.appendChild(document.createElement('p')).innerHTML = err.toString();
-			errors.style.display = 'block';
-			return;
-		}
+    Button.prototype.onAdd = function (map) {
+        this._container = document.createElement('button');
+        this._container.className = 'mapboxgl-ctrl';
+        this._container.textContent = this.name;
+        this._container.onclick = function () {
+            map[this.method] = !map[this.method];
+        }.bind(this);
+        return this._container;
+    };
 
-		if (stylesheet.error) {
-			errors.style.display = 'block';
-			errors.appendChild(document.createElement('h2')).innerHTML = 'Script Evaluation Error';
-			errors.appendChild(document.createElement('pre')).innerHTML = stylesheet.error;
-			return;
-		}
+    Button.prototype.onRemove = function () {
+        this._container.parentNode.removeChild(this._container);
+    };
 
-		var valid = window.validate ? validate(stylesheet) : [];
-		if (valid.length) {
-			errors.style.display = 'block';
-			errors.appendChild(document.createElement('h2')).innerHTML = 'Style Validation Error';
-			valid.forEach(function (e) {
-				errors.appendChild(document.createElement('p')).innerHTML = e.message;
-				console.error(e);
-			});
-			return;
-		}
+    var ButtonCustom = function(name, callback) {
+        this.name = name;
+        this.callback = callback;
+    };
 
-		map = new mapboxgl.Map({
-			container: 'map',
-			style: stylesheet,
-			hash: true
-		});
-		map.addControl(new mapboxgl.NavigationControl());
-		map.addControl(new Button('Tile Boundaries', 'showTileBoundaries'));
-		map.addControl(new Button('Collision Boxes ', 'showCollisionBoxes'));
-		map.addControl(new ButtonCustom('Refresh stylů ', () => refresh()));
-		map.addControl(new ButtonCustom('Tisk ', () => printMap()));
-	});
+    ButtonCustom.prototype.onAdd = function () {
+        this._container = document.createElement('button');
+        this._container.className = 'mapboxgl-ctrl';
+        this._container.textContent = this.name;
+        this._container.onclick = this.callback
+        return this._container;
+    };
 
+    ButtonCustom.prototype.onRemove = function () {
+        this._container.parentNode.removeChild(this._container);
+    };
 
-	function reload() {
-		getJSON('style.json', function (err, stylesheet) {
-			map.setStyle(stylesheet);
-		});
-	}
-
-        function printMap() {
-                map.once('render', () => {
-	                var canvas = map.getCanvas();
-			canvas.toBlob(blob => {
-				var url = URL.createObjectURL(blob);
-	        	        var a = document.createElement('a');
-        	        	a.download = 'map.png';
-	        	        a.href = url;
-        	        	document.body.appendChild(a);
-	                	a.click();
-		                a.remove();			
-				URL.revokeObjectURL(url);
-			}, 'image/png');
-                });
-		// force re-render
-		map.setBearing(map.getBearing());
+    getJSON('style.json', function (err, stylesheet) {
+        if (err) {
+            errors.appendChild(document.createElement('h2')).innerHTML = 'JSON Error';
+            errors.appendChild(document.createElement('p')).innerHTML = err.toString();
+            errors.style.display = 'block';
+            return;
         }
 
-	setInterval(function () {
-		reload();
-	}, 4000);
+        if (stylesheet.error) {
+            errors.style.display = 'block';
+            errors.appendChild(document.createElement('h2')).innerHTML = 'Script Evaluation Error';
+            errors.appendChild(document.createElement('pre')).innerHTML = stylesheet.error;
+            return;
+        }
+
+        var valid = window.validate ? validate(stylesheet) : [];
+        if (valid.length) {
+            errors.style.display = 'block';
+            errors.appendChild(document.createElement('h2')).innerHTML = 'Style Validation Error';
+            valid.forEach(function (e) {
+                errors.appendChild(document.createElement('p')).innerHTML = e.message;
+                console.error(e);
+            });
+            return;
+        }
+
+        map = new mapboxgl.Map({
+            container: 'map',
+            style: stylesheet,
+            hash: true
+        });
+        map.addControl(new mapboxgl.NavigationControl());
+        map.addControl(new Button('Tile Boundaries', 'showTileBoundaries'));
+        map.addControl(new Button('Collision Boxes ', 'showCollisionBoxes'));
+        map.addControl(new ButtonCustom('Refresh stylů ', () => refresh()));
+        map.addControl(new ButtonCustom('Tisk ', () => printMap()));
+    });
+
+
+    function reload() {
+        getJSON('style.json', function (err, stylesheet) {
+            map.setStyle(stylesheet);
+        });
+    }
+
+    function printMap() {
+        map.once('render', () => {
+                var canvas = map.getCanvas();
+            canvas.toBlob(blob => {
+                var url = URL.createObjectURL(blob);
+                        var a = document.createElement('a');
+                        a.download = 'map.png';
+                        a.href = url;
+                        document.body.appendChild(a);
+                        a.click();
+                        a.remove();
+                URL.revokeObjectURL(url);
+            }, 'image/png');
+        });
+    // force re-render
+    map.setBearing(map.getBearing());
+    }
+
+    setInterval(function () {
+        reload();
+    }, 4000);
 
 </script>
 </body>
