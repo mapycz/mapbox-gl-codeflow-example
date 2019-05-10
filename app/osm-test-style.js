@@ -196,7 +196,43 @@ var streets = [
             "text-halo-color": "white"
         }
     },
+];
+
+function make_place(layer) {
+    return {
+        "id": layer,
+        "type": "symbol",
+        "source": source,
+        "source-layer": layer,
+        "layout": {
+            "symbol-placement": "point",
+            "text-allow-overlap": false,
+            "text-ignore-placement": false,
+            "text-field": "{name}",
+            "text-size": 14,
+            "text-font": [
+                "DejaVuSans",
+            ]
+        },
+        "paint": {
+            "text-halo-width": 2,
+            "text-halo-color": "white"
+        }
+    }
+}
+
+const places_layers = [
+    "nazvy-sidel-capital-city",
+    "nazvy-sidel-low-zoom",
+    "nazvy-sidel-town",
+    "nazvy-sidel-ostatni",
 ]
+
+var places = [];
+
+for (const layer of places_layers) {
+    places.push(make_place(layer));
+}
 
 var layers = [
     {
@@ -211,6 +247,7 @@ var layers = [
     ...landcover,
     ...streets,
     ...buildings,
+    ...places,
 ];
 
 var style = {
