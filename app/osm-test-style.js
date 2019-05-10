@@ -19,13 +19,13 @@ const sources = {
 const source = "osm-base";
 
 const land = {
-        "id": "pevnina",
-        "type": "fill",
-        "source": source,
-        "source-layer": "pevnina",
-        "paint": {
-            "fill-color": "#f2f1e1",
-        }
+    "id": "pevnina",
+    "type": "fill",
+    "source": source,
+    "source-layer": "pevnina",
+    "paint": {
+        "fill-color": "#f2f1e1",
+    }
 };
 
 const hillshade = {
