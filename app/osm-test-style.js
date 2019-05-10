@@ -86,6 +86,107 @@ var buildings = [
     },
 ];
 
+var streets = [
+    {
+        "id": "asfalt",
+        "type": "fill",
+        "source": source,
+        "source-layer": "asfalt-casing",
+        "paint": {
+            "fill-color": "lightgray"
+        }
+    },
+
+    {
+        "type": "line",
+        "source": source,
+        "source-layer": "3tridy-atd-casing",
+        "id": "3tridy-atd-casing",
+        "paint": {
+            "line-color": "gray",
+            "line-width": {
+                "base": 1.55,
+                "stops": [
+                    [ 4, 0.25 ],
+                    [ 20, 80 ]
+                ]
+            }
+        },
+    },
+
+    {
+        "type": "line",
+        "source": source,
+        "source-layer": "2tridy-casing",
+        "id": "2tridy-casing",
+        "paint": {
+            "line-color": "gray",
+            "line-width": {
+                "base": 1.55,
+                "stops": [
+                    [ 4, 0.25 ],
+                    [ 20, 80 ]
+                ]
+            }
+        },
+    },
+
+    {
+        "type": "line",
+        "source": source,
+        "source-layer": "3tridy-atd-casing",
+        "id": "3tridy",
+        "paint": {
+            "line-color": "white",
+            "line-width": {
+                "base": 1.55,
+                "stops": [
+                    [ 4, 0.2 ],
+                    [ 20, 78 ]
+                ]
+            }
+        },
+    },
+
+    {
+        "type": "line",
+        "source": source,
+        "source-layer": "2tridy-casing",
+        "id": "2tridy",
+        "paint": {
+            "line-color": "yellow",
+            "line-width": {
+                "base": 1.55,
+                "stops": [
+                    [ 4, 0.2 ],
+                    [ 20, 78 ]
+                ]
+            }
+        },
+    },
+
+    {
+        "id": "nazvy-ulic-base",
+        "type": "symbol",
+        "source": source,
+        "source-layer": "nazvy-ulic-base",
+        "layout": {
+            "symbol-placement": "line",
+            "text-allow-overlap": false,
+            "text-ignore-placement": false,
+            "text-field": "{name}",
+            "text-size": 14,
+            "text-font": [
+                "DejaVuSans",
+            ]
+        },
+        "paint": {
+            "text-halo-width": 2,
+            "text-halo-color": "white"
+        }
+    },
+]
+
 var style = {
     'version': 8,
     'name': 'Basic',
@@ -119,109 +220,8 @@ var style = {
         },
 
         hillshade,
-
         ...landcover,
-
-   
-        {
-            "id": "asfalt",
-            "type": "fill",
-            "source": source,
-            "source-layer": "asfalt-casing",
-            "paint": {
-                "fill-color": "lightgray"
-            }
-        },
-
-        {
-            "type": "line",
-            "source": source,
-            "source-layer": "3tridy-atd-casing",
-            "id": "3tridy-atd-casing",
-            "paint": {
-                "line-color": "gray",
-                "line-width": {
-                    "base": 1.55,
-                    "stops": [
-                        [ 4, 0.25 ],
-                        [ 20, 80 ]
-                    ]
-                }
-            },
-        },
-
-        {
-            "type": "line",
-            "source": source,
-            "source-layer": "2tridy-casing",
-            "id": "2tridy-casing",
-            "paint": {
-                "line-color": "gray",
-                "line-width": {
-                    "base": 1.55,
-                    "stops": [
-                        [ 4, 0.25 ],
-                        [ 20, 80 ]
-                    ]
-                }
-            },
-        },
-
-        {
-            "type": "line",
-            "source": source,
-            "source-layer": "3tridy-atd-casing",
-            "id": "3tridy",
-            "paint": {
-                "line-color": "white",
-                "line-width": {
-                    "base": 1.55,
-                    "stops": [
-                        [ 4, 0.2 ],
-                        [ 20, 78 ]
-                    ]
-                }
-            },
-        },
-
-        {
-            "type": "line",
-            "source": source,
-            "source-layer": "2tridy-casing",
-            "id": "2tridy",
-            "paint": {
-                "line-color": "yellow",
-                "line-width": {
-                    "base": 1.55,
-                    "stops": [
-                        [ 4, 0.2 ],
-                        [ 20, 78 ]
-                    ]
-                }
-            },
-        },
-
-        {
-            "id": "nazvy-ulic-base",
-            "type": "symbol",
-            "source": source,
-            "source-layer": "nazvy-ulic-base",
-            "layout": {
-                "symbol-placement": "line",
-                "text-allow-overlap": false,
-                "text-ignore-placement": false,
-                "text-field": "{name}",
-                "text-size": 14,
-                "text-font": [
-                    "DejaVuSans",
-                ]
-            },
-            "paint": {
-                "text-halo-width": 2,
-                "text-halo-color": "white"
-            }
-        },
-
+        ...streets,
         ...buildings,
     ]
 };
