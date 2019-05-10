@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-var baseURL = "http://drbalek-1.mapy-dev.ko1.os.scif.cz:8081";
+const baseURL = "http://drbalek-1.mapy-dev.ko1.os.scif.cz:8081";
 
-var sources = {
+const sources = {
     "osm-base": {
         'type': 'vector',
         'tiles': [ baseURL + '/mvt-test-1/{z}-{x}-{y}' ],
@@ -16,7 +16,19 @@ var sources = {
     }
 };
 
-var hillshade = {
+const source = "osm-base";
+
+const land = {
+        "id": "pevnina",
+        "type": "fill",
+        "source": source,
+        "source-layer": "pevnina",
+        "paint": {
+            "fill-color": "#f2f1e1",
+        }
+    };
+
+const hillshade = {
     "type": "hillshade",
     "paint": {
         "hillshade-shadow-color": "hsl(39, 21%, 33%)"
@@ -28,9 +40,8 @@ var hillshade = {
     "source": "terrain"
 };
 
-var source = "osm-base";
-
-var landcover = [{
+const landcover = [
+    {
         "id": "landcover_green_1",
         "type": "fill",
         "source": source,
@@ -72,7 +83,7 @@ var landcover = [{
     },
 ];
 
-var buildings = [
+const buildings = [
 
     {
         "id": "buildings",
@@ -97,7 +108,7 @@ var buildings = [
     },
 ];
 
-var streets = [
+const streets = [
     {
         "id": "asfalt",
         "type": "fill",
@@ -234,15 +245,16 @@ for (const layer of places_layers) {
     places.push(make_place(layer));
 }
 
-var layers = [
+const layers = [
     {
         "id": "background",
         "type": "background",
         "paint": {
-            "background-color": "#f2f1e1"
+            "background-color": "#8ebddd"
         }
     },
 
+    land,
     hillshade,
     ...landcover,
     ...streets,
@@ -250,7 +262,7 @@ var layers = [
     ...places,
 ];
 
-var style = {
+const style = {
     'version': 8,
     'name': 'Basic',
     "center": [11.06539, 49.45176],
