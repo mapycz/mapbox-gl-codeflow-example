@@ -1,13 +1,15 @@
 #!/usr/bin/env node
 
+var baseURL = "http://drbalek-1.mapy-dev.ko1.os.scif.cz:8081";
+
 var sources = {
     "osm-base": {
         'type': 'vector',
-        'tiles': [ 'http://drbalek-1.mapy-dev.ko1.os.scif.cz:8081/mvt-test-1/{z}-{x}-{y}' ],
+        'tiles': [ baseURL + '/mvt-test-1/{z}-{x}-{y}' ],
         'maxzoom': 18
     },
     "terrain": {
-        'tiles': [ 'http://drbalek-1.mapy-dev.ko1.os.scif.cz:8081/test-terrain-1/{z}-{x}-{y}' ],
+        'tiles': [ baseURL + '/test-terrain-1/{z}-{x}-{y}' ],
         "type": "raster-dem",
         "tileSize": 256,
         'maxzoom': 14
