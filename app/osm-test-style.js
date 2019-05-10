@@ -1,11 +1,18 @@
 #!/usr/bin/env node
 
-//var chroma = require('chroma-js');
-
-//var WATER_COLOR = '#ace';
-//var BACKGROUND = chroma(WATER_COLOR).darken().hex();
-
-var source = "osm-base";
+var sources = {
+    "osm-base": {
+        'type': 'vector',
+        'tiles': [ 'http://drbalek-1.mapy-dev.ko1.os.scif.cz:8081/mvt-test-1/{z}-{x}-{y}' ],
+        'maxzoom': 18
+    },
+    "terrain": {
+        'tiles': [ 'http://drbalek-1.mapy-dev.ko1.os.scif.cz:8081/test-terrain-1/{z}-{x}-{y}' ],
+        "type": "raster-dem",
+        "tileSize": 256,
+        'maxzoom': 14
+    }
+};
 
 var hillshade = {
     "type": "hillshade",
@@ -18,6 +25,8 @@ var hillshade = {
     "id": "terrain",
     "source": "terrain"
 };
+
+var source = "osm-base";
 
 var landcover = [{
         "id": "landcover_green_1",
@@ -187,43 +196,29 @@ var streets = [
     },
 ]
 
-var style = {
-    'version': 8,
-    'name': 'Basic',
-
-    "center": [11.06539, 49.45176],
-    "zoom": 16,
-
-    'sources': {
-        'osm-base': {
-            'type': 'vector',
-            'tiles': [ 'http://drbalek-1.mapy-dev.ko1.os.scif.cz:8081/mvt-test-1/{z}-{x}-{y}' ],
-            'maxzoom': 18
-        },
-        "terrain": {
-            'tiles': [ 'http://drbalek-1.mapy-dev.ko1.os.scif.cz:8081/test-terrain-1/{z}-{x}-{y}' ],
-            "type": "raster-dem",
-            "tileSize": 256,
-            'maxzoom': 14
+var layers = [
+    {
+        "id": "background",
+        "type": "background",
+        "paint": {
+            "background-color": "#f2f1e1"
         }
     },
 
+    hillshade,
+    ...landcover,
+    ...streets,
+    ...buildings,
+];
+
+var style = {
+    'version': 8,
+    'name': 'Basic',
+    "center": [11.06539, 49.45176],
+    "zoom": 16,
+    'sources': sources,
     "glyphs": "./assets/fonts/{fontstack}/{range}.pbf",
-
-    'layers': [
-        {
-            "id": "background",
-            "type": "background",
-            "paint": {
-                "background-color": "#f2f1e1"
-            }
-        },
-
-        hillshade,
-        ...landcover,
-        ...streets,
-        ...buildings,
-    ]
+    'layers': layers,
 };
 
 process.stdout.write(JSON.stringify(style, null, 4));

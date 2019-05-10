@@ -27,6 +27,7 @@
     "through2": "^2.0.0"
   },
   "dependencies": {
+    "mapbox-gl": "^0.54.0",
     "minimist": "^1.1.3"
   }
 }
