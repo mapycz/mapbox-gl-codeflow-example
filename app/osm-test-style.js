@@ -7,12 +7,90 @@
 
 var source = "osm-base";
 
+var hillshade = {
+    "type": "hillshade",
+    "paint": {
+        "hillshade-shadow-color": "hsl(39, 21%, 33%)"
+    },
+    "layout": {
+        "visibility": "visible"
+    },
+    "id": "terrain",
+    "source": "terrain"
+};
+
+var landcover = [{
+        "id": "landcover_green_1",
+        "type": "fill",
+        "source": source,
+        "source-layer": "landcover_green_1",
+        "paint": {
+            "fill-color": "#d0e5b7",
+            "fill-opacity": 0.5,
+        }
+    },
+    {
+        "id": "landcover_green_2",
+        "type": "fill",
+        "source": source,
+        "source-layer": "landcover_green_2",
+        "paint": {
+            "fill-color": "#d0e5b7",
+            "fill-opacity": 0.5,
+        }
+    },
+
+    {
+        "id": "water_areas_8-18",
+        "type": "fill",
+        "source": source,
+        "source-layer": "water_areas_8-18",
+        "paint": {
+            "fill-color": "#8ebddd"
+        }
+    },
+
+    {
+        "id": "landcover_civic",
+        "type": "fill",
+        "source": source,
+        "source-layer": "landcover_civic",
+        "paint": {
+            "fill-color": "#e5d9b7"
+        }
+    },
+];
+
+var buildings = [
+
+    {
+        "id": "buildings",
+        "type": "fill-extrusion",
+        "source": source,
+        "source-layer": "buildings",
+        "paint": {
+            "fill-extrusion-height": 10,
+            "fill-extrusion-color": "gray"
+        }
+    },
+
+    {
+        "id": "buildings-historicke",
+        "type": "fill-extrusion",
+        "source": source,
+        "source-layer": "budovy-ruzove-historicke",
+        "paint": {
+            "fill-extrusion-height": 10,
+            "fill-extrusion-color": "sienna"
+        }
+    },
+];
+
 var style = {
     'version': 8,
     'name': 'Basic',
 
     "center": [11.06539, 49.45176],
-    //"pitch": 60,
     "zoom": 16,
 
     'sources': {
@@ -20,11 +98,15 @@ var style = {
             'type': 'vector',
             'tiles': [ 'http://drbalek-1.mapy-dev.ko1.os.scif.cz:8081/mvt-test-1/{z}-{x}-{y}' ],
             'maxzoom': 18
+        },
+        "terrain": {
+            'tiles': [ 'http://drbalek-1.mapy-dev.ko1.os.scif.cz:8081/test-terrain-1/{z}-{x}-{y}' ],
+            "type": "raster-dem",
+            "tileSize": 256,
+            'maxzoom': 14
         }
     },
 
-    //'sprite': '',
-    //'glyphs': '',
     "glyphs": "./assets/fonts/{fontstack}/{range}.pbf",
 
     'layers': [
@@ -36,46 +118,11 @@ var style = {
             }
         },
 
-        {
-            "id": "landcover_green_1",
-            "type": "fill",
-            "source": source,
-            "source-layer": "landcover_green_1",
-            "paint": {
-                "fill-color": "#d0e5b7"
-            }
-        },
+        hillshade,
 
-        {
-            "id": "landcover_green_2",
-            "type": "fill",
-            "source": source,
-            "source-layer": "landcover_green_2",
-            "paint": {
-                "fill-color": "#d0e5b7"
-            }
-        },
+        ...landcover,
 
-        {
-            "id": "water_areas_8-18",
-            "type": "fill",
-            "source": source,
-            "source-layer": "water_areas_8-18",
-            "paint": {
-                "fill-color": "#8ebddd"
-            }
-        },
-
-        {
-            "id": "landcover_civic",
-            "type": "fill",
-            "source": source,
-            "source-layer": "landcover_civic",
-            "paint": {
-                "fill-color": "#e5d9b7"
-            }
-        },
-
+   
         {
             "id": "asfalt",
             "type": "fill",
@@ -175,28 +222,7 @@ var style = {
             }
         },
 
-        {
-            "id": "buildings",
-            "type": "fill-extrusion",
-            "source": source,
-            "source-layer": "buildings",
-            "paint": {
-                "fill-extrusion-height": 10,
-                "fill-extrusion-color": "gray"
-            }
-        },
-
-        {
-            "id": "buildings-historicke",
-            "type": "fill-extrusion",
-            "source": source,
-            "source-layer": "budovy-ruzove-historicke",
-            "paint": {
-                "fill-extrusion-height": 10,
-                "fill-extrusion-color": "sienna"
-            }
-        },
-
+        ...buildings,
     ]
 };
 
