@@ -12,7 +12,7 @@ const sources = {
         'tiles': [ baseURL + '/test-terrain-1/{z}-{x}-{y}' ],
         "type": "raster-dem",
         "tileSize": 256,
-        'maxzoom': 14
+        'maxzoom': 13
     }
 };
 
