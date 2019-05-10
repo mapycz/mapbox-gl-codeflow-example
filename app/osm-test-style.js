@@ -26,7 +26,7 @@ const land = {
         "paint": {
             "fill-color": "#f2f1e1",
         }
-    };
+};
 
 const hillshade = {
     "type": "hillshade",
