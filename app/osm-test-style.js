@@ -5,7 +5,7 @@ const baseURL = "http://drbalek-1.mapy-dev.ko1.os.scif.cz:8081";
 const sources = {
     "osm-base": {
         'type': 'vector',
-        'tiles': [ baseURL + '/mvt-test-1/{z}-{x}-{y}' ],
+        'tiles': [ baseURL + '/mvt-test-2/{z}-{x}-{y}' ],
         'maxzoom': 18
     },
     "terrain": {
@@ -113,7 +113,7 @@ const streets = [
         "id": "asfalt",
         "type": "fill",
         "source": source,
-        "source-layer": "asfalt-casing",
+        "source-layer": "asphalt",
         "paint": {
             "fill-color": "lightgray"
         }
@@ -122,7 +122,24 @@ const streets = [
     {
         "type": "line",
         "source": source,
-        "source-layer": "3tridy-atd-casing",
+        "source-layer": "roads3_fill",
+        "id": "3tridy-fill",
+        "paint": {
+            "line-color": "gray",
+            "line-width": {
+                "base": 1.55,
+                "stops": [
+                    [ 4, 0.25 ],
+                    [ 20, 80 ]
+                ]
+            }
+        },
+    },
+
+    {
+        "type": "line",
+        "source": source,
+        "source-layer": "roads3_lowride",
         "id": "3tridy-atd-casing",
         "paint": {
             "line-color": "gray",
@@ -139,7 +156,7 @@ const streets = [
     {
         "type": "line",
         "source": source,
-        "source-layer": "2tridy-casing",
+        "source-layer": "roads2_lowride",
         "id": "2tridy-casing",
         "paint": {
             "line-color": "gray",
@@ -156,7 +173,41 @@ const streets = [
     {
         "type": "line",
         "source": source,
-        "source-layer": "3tridy-atd-casing",
+        "source-layer": "roads1_lowride",
+        "id": "1tridy-casing",
+        "paint": {
+            "line-color": "gray",
+            "line-width": {
+                "base": 1.55,
+                "stops": [
+                    [ 4, 0.25 ],
+                    [ 20, 80 ]
+                ]
+            }
+        },
+    },
+
+    {
+        "type": "line",
+        "source": source,
+        "source-layer": "roads3_fill",
+        "id": "3tridy_fill",
+        "paint": {
+            "line-color": "white",
+            "line-width": {
+                "base": 1.55,
+                "stops": [
+                    [ 4, 0.2 ],
+                    [ 20, 78 ]
+                ]
+            }
+        },
+    },
+
+    {
+        "type": "line",
+        "source": source,
+        "source-layer": "roads3_lowride",
         "id": "3tridy",
         "paint": {
             "line-color": "white",
@@ -173,7 +224,7 @@ const streets = [
     {
         "type": "line",
         "source": source,
-        "source-layer": "2tridy-casing",
+        "source-layer": "roads2_lowride",
         "id": "2tridy",
         "paint": {
             "line-color": "yellow",
@@ -188,10 +239,27 @@ const streets = [
     },
 
     {
+        "type": "line",
+        "source": source,
+        "source-layer": "roads1_lowride",
+        "id": "1tridy",
+        "paint": {
+            "line-color": "orange",
+            "line-width": {
+                "base": 1.55,
+                "stops": [
+                    [ 4, 0.2 ],
+                    [ 20, 78 ]
+                ]
+            }
+        },
+    },
+
+    {
         "id": "nazvy-ulic-base",
         "type": "symbol",
         "source": source,
-        "source-layer": "nazvy-ulic-base",
+        "source-layer": "nazvy-ulic-turist",
         "layout": {
             "symbol-placement": "line",
             "text-allow-overlap": false,
@@ -209,12 +277,12 @@ const streets = [
     },
 ];
 
-function make_place(layer) {
-    return {
-        "id": layer,
+const places = [
+    {
+        "id": "places",
         "type": "symbol",
         "source": source,
-        "source-layer": layer,
+        "source-layer": "places",
         "layout": {
             "symbol-placement": "point",
             "text-allow-overlap": false,
@@ -230,20 +298,7 @@ function make_place(layer) {
             "text-halo-color": "white"
         }
     }
-}
-
-const places_layers = [
-    "nazvy-sidel-capital-city",
-    "nazvy-sidel-low-zoom",
-    "nazvy-sidel-town",
-    "nazvy-sidel-ostatni",
 ]
-
-var places = [];
-
-for (const layer of places_layers) {
-    places.push(make_place(layer));
-}
 
 const layers = [
     {
